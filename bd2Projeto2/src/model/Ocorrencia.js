@@ -4,15 +4,10 @@ const {Schema} = mongoose;
 const ocorrenciaSchema = new Schema({
     titulo: String,
     data: Date,
-    tipo: {
-        type: String,
-        enum: ['Assalto', 'Furto', 'Outros'],
-        default:  'Outros' 
-    },
+    tipo: String,
     localizacao: {
         type: {
           type: String,
-          enum: ['Point'], 
           required: true
         },
         coordinates: {

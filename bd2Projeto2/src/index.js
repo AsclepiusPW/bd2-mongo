@@ -8,7 +8,6 @@ app.use(cors());
 const ocorrenciaRouter = require('./routes/OcorrenciaRouter');
 app.use('/ocorrencias', ocorrenciaRouter);
 
-
 app.listen(process.env.API_PORT, ()=>{
     console.log(`API rodando na porta ${process.env.API_PORT}`);
 });
