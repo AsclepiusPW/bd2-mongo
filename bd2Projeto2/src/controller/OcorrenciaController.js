@@ -2,7 +2,7 @@ const Ocorrencia = require('../model/Ocorrencia');
 
 module.exports.listarOcorrencias = async function (req, res) {
     const ocorrencias = await Ocorrencia.find({},
-        {titulo:true, tipo:true});
+        {titulo:true, tipo:true, data:true, localizacao:true});
     res.status(200).json(ocorrencias);
 };
 
