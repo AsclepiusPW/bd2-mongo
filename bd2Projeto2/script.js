@@ -45,6 +45,30 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
+    const editarOcorrencia = async (ocorrenciaId, dadosEditados) => {
+        try {
+            const options = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dadosEditados)
+            };
+    
+            const response = await fetch(`http://localhost:3000/ocorrencias/${ocorrenciaId}`, options);
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error('Erro ao editar ocorrência:', error);
+        }
+        const ocorrenciasDoBanco = await buscarOcorrencias();
+
+        if (ocorrenciasDoBanco.length > 0) {
+        const ultimaOcorrencia = ocorrenciasDoBanco[ocorrenciasDoBanco.length - 1];
+        await deletarOcorrencia(ultimaOcorrencia._id);
+    }
+    };
+
 
     const exibirOcorrencias = async () => {
         try {
@@ -52,6 +76,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             const ocorrenciaHTML = ocorrenciasDoBanco.map((ocorrencia, index) => {
                 const uniqueId = `mostradorDeLocal_${index}`;
                 const deleteId = `deletarOcorrencia_${index}`;
+                const editId = `editarOcorrencia_${index}`;
+
                 const coordinates = ocorrencia.localizacao && ocorrencia.localizacao.coordinates
                 ? ocorrencia.localizacao.coordinates
                 : ['N/A', 'N/A'];
@@ -65,6 +91,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         <p>Longitude: ${coordinates[0]}</p>
                         <button id="${uniqueId}" class="mostradorDeLocal">Mostrar Local</button>
                         <button id="${deleteId}" class="deletarOcorrencia">Deletar</button>
+                        <button id="${editId}" class="editarOcorrencia">Editar</button>
                     </div>
                 `;
             });
@@ -88,6 +115,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                     }
                 });
                 
+                const editId = `editarOcorrencia_${index}`;
+                const editarButt = document.getElementById(editId);
+                editarButt.addEventListener('click', () => {
+                    abrirFormularioEdicao(ocorrencia);
+                });
     
                 const deleteId = `deletarOcorrencia_${index}`
                 const deletarButt = document.getElementById(deleteId);
@@ -101,6 +133,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     };
 
+    
     const form = document.getElementById('ocorrenciaForm');
     
     form.addEventListener('submit', async function(e) {
@@ -120,7 +153,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 coordinates: [longitudeOcorrencia, latitudeOcorrencia]
             }
         };
-        console.log(novaOcorrencia);
+        
         await adicionarOcorrencia(novaOcorrencia);
 
         document.getElementById('nomeOcorrencia').value = '';
@@ -128,9 +161,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         document.getElementById('dataHoraOcorrencia').value = '';
         document.getElementById('latitudeOcorrencia').value = '';
         document.getElementById('longitudeOcorrencia').value = '';
+
     });
 
-    const mapDiv = document.querySelector(".map");
     let map = L.map('mapDiv').setView([-6.889531952896556, -38.54527473449707], 17);
     let marcador = L.marker([-6.889531952896556, -38.54527473449707]).addTo(map);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -155,8 +188,44 @@ document.addEventListener('DOMContentLoaded', async function() {
     })
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map);
+        maxZoom: 19,
+        ttribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    await exibirOcorrencias();
+
+    const abrirFormularioEdicao = async (ocorrencia) => {
+        document.getElementById('nomeOcorrencia').value = ocorrencia.titulo;
+        document.getElementById('descricaoOcorrencia').value = ocorrencia.tipo;
+        document.getElementById('dataHoraOcorrencia').value = ocorrencia.data;
+        document.getElementById('latitudeOcorrencia').value = ocorrencia.localizacao.coordinates[1];
+        document.getElementById('longitudeOcorrencia').value = ocorrencia.localizacao.coordinates[0];
+
+        const formEdicao = document.getElementById('ocorrenciaForm');
+        
+        formEdicao.removeEventListener('submit', adicionarOcorrencia);
+        
+        formEdicao.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const dadosEditados = {
+                titulo: document.getElementById('nomeOcorrencia').value,
+                tipo: document.getElementById('descricaoOcorrencia').value,
+                data: document.getElementById('dataHoraOcorrencia').value,
+                localizacao: {
+                    type: 'Point',
+                    coordinates: [
+                        parseFloat(document.getElementById('longitudeOcorrencia').value),
+                        parseFloat(document.getElementById('latitudeOcorrencia').value)
+                    ]
+                }
+            };
+
+            await editarOcorrencia(ocorrencia._id, dadosEditados);
+            formEdicao.reset();
+            formEdicao.removeEventListener('submit', editarOcorrencia);
+            formEdicao.addEventListener('submit', adicionarOcorrencia);
+            await exibirOcorrencias();
+        });
+    };
 
 });

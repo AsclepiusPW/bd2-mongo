@@ -25,16 +25,23 @@ module.exports.removerOcorrencia = async function (req, res){
 };
 
 module.exports.editarOcorrencia = async function (req, res) {
-    const ocorrencia = await Ocorrencia.findOne({ nome: req.params.nome});
-    
-    if(!ocorrencia){
-        res.status(404).json({erro: 'Ocorrência não encontrada'});
-        return;
+    try {
+        const ocorrencia = await Ocorrencia.findById(req.params.id);
+
+        if (!ocorrencia) {
+            res.status(404).json({ erro: 'Ocorrência não encontrada' });
+            return;
+        }
+
+        Object.assign(ocorrencia, req.body);
+
+        const retorno = await ocorrencia.save();
+
+        res.status(200).json(retorno);
+    } catch (error) {
+        console.error('Erro ao editar ocorrência:', error);
+        res.status(500).json({ erro: 'Erro interno ao editar ocorrência' });
     }
-    
-    const retorno = await Ocorrencia.findByIdAndUpdate(
-        req.params.id, req.body, {new: true});
-    res.status(200).json(retorno);
 };
 
 module.exports.buscarOcorrencia = async function (req, res) {
