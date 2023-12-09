@@ -1,3 +1,4 @@
+// MONGO DB
 require('dotenv').config();
 const mongoose = require('mongoose');
 
@@ -11,6 +12,5 @@ async function main() {
     console.error('Erro ao conectar ao mongo:', error);
   }
 }
-
 
 module.exports = mongoose;

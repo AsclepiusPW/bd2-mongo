@@ -18,6 +18,25 @@
     <div id="header">
         <img id="logo" src="public/logo.png">
     </div>
+    <div id="loginCadastro">
+        <form id="cadastroForm">
+            <h1>Cadastrar</h1>
+            <label>Nome de Usuário:</label>
+            <input type="text" required placeholder="Digite seu nome de usuário" id="nomeUsuario">
+            <label>Senha:</label>
+            <input type="text" required placeholder="Digite sua senha" id="senha">
+            <label>Confirme sua senha:</label>
+            <input type="text" required placeholder="Confirme sua senha">
+            <button type="submit" id="cadastrarButton">Cadastrar</button>
+        </form>
+        <form id="loginForm">
+            <h1>Fazer Login</h1>
+            <label>Nome de Usuário:</label>
+            <input type="text" required placeholder="Digite seu nome de usuário">
+            <label>Senha:</label>
+            <input type="text" required placeholder="Digite sua senha">
+        </form>
+    </div>
     <div id="content">
         <div id="registerCard">
             <h1>Registre sua Ocorrência:</h1>
@@ -48,9 +67,10 @@
         </div>
         <div id="OcorrenciaList">
             <h2 id="titulo">Lista de Ocorrências:</h2>
+            <input type="text" placeholder="Buscar ocorrência" id="buscaInput">
         </div>
     </div>
-    <iframe style="background: #000000;border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgb(0, 0, 0);width: 100vw;height: 100vh;"  src="https://charts.mongodb.com/charts-bd2projeto2-vopcl/embed/dashboards?id=655bc3cd-ec16-4170-80b3-d97bc1a8db69&theme=dark&autoRefresh=true&maxDataAge=3600&showTitleAndDesc=true&scalingWidth=scale&scalingHeight=scale"></iframe>
+    <iframe id="iframe" src="https://charts.mongodb.com/charts-bd2projeto2-vopcl/embed/dashboards?id=655bc3cd-ec16-4170-80b3-d97bc1a8db69&theme=dark&autoRefresh=true&maxDataAge=3600&showTitleAndDesc=true&scalingWidth=scale&scalingHeight=scale"></iframe>
     <script src="script.js"></script>
 </body>
 </html>

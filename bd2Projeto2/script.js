@@ -1,4 +1,34 @@
 document.addEventListener('DOMContentLoaded', async function() {
+
+    const criarUsuario = async () => {
+        const nomeDeUsuario = document.getElementById('nomeDeUsuario').value;
+        const senha = document.getElementById('senha').value;
+    
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nomeDeUsuario, senha })
+        };
+    
+        try {
+            const response = await fetch('bolt://localhost:7687/usuarios', options);
+            const data = await response.json();
+    
+            // Após registrar
+            const contentContainer = document.getElementById('contentContainer');
+            contentContainer.style.display = 'flex';
+            const iframe = document.getElementById('iframe');
+            iframe.style.display = 'flex'
+    
+            console.log(data);
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
+    };
+    
+
     const ocorrenciaList = document.getElementById('OcorrenciaList')
 
     const adicionarOcorrencia = async (ocorrencia) => {

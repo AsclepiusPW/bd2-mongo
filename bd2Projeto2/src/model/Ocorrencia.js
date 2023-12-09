@@ -3,6 +3,7 @@ const {Schema} = mongoose;
 
 const ocorrenciaSchema = new Schema({
     titulo: String,
+    userId: Number,
     data: Date,
     tipo: String,
     localizacao: {
