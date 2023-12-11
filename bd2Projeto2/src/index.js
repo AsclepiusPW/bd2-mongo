@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const { driver } = require('./database/neo4j');
+const driver  = require('./database/neo4j');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 
 app.use(express.json());
