@@ -1,9 +1,19 @@
 const Ocorrencia = require('../model/Ocorrencia');
+const redis = require('../database/redis');
 
 module.exports.listarOcorrencias = async function (req, res) {
+    const dadosEmCache = await redis.get("Ocorrencia");
+
+    if (dadosEmCache) {
+        console.log("Deu certo, moral!");
+        return res.status(200).json(JSON.parse(dadosEmCache));
+    }
+
     const ocorrencias = await Ocorrencia.find({},
         {titulo:true, tipo:true, data:true, localizacao:true});
     res.status(200).json(ocorrencias);
+
+    redis.setEx("Ocorrencia", 120, JSON.stringify(ocorrencias));
 };
 
 module.exports.cadastrarOcorrencia = async function (req, res){

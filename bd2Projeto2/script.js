@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function() {
-    const ocorrenciaList = document.getElementById('OcorrenciaList')
+    const ocorrenciaList = document.getElementById('OcorrenciaList');
 
     const adicionarOcorrencia = async (ocorrencia) => {
         try {
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     
             const response = await fetch("http://localhost:3000/ocorrencias", options);
             const data = await response.json();
-            console.log(data);
+            //console.log(data);
             
             await exibirOcorrencias();
         } catch (error) {
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 `;
             });
         
-            ocorrenciaList.innerHTML = '';
+            ocorrenciaList.innerHTML = '<h2 id="titulo">Lista de Ocorrências:</h2>';
             ocorrenciaList.innerHTML += ocorrenciaHTML.join('');
         
             ocorrenciasDoBanco.map((ocorrencia, index) => {
